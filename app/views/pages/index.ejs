@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista 1 Exercício 3</title>
+</head>
+<body>
+
+    <form action="/classificar" method="post">
+
+        <label for="salario">Digite o seu Salario:</label> <br>
+        <input type="text" name="salario" id="salario" value="<%= valores.salario %>"> <br>
+        <button type="submit">Classificar</button>
+
+    </form>
+    <%
+
+        if(retorno){
+            %>
+            <h2>Salario atual: <%= retorno.salario %></h2>
+            <h2>Porcentagem de aumento: <%= retorno.porcentagem %></h2>
+            <h2>Aumento: <%= retorno.aumento %></h2>
+            <h2>Salario Final: <%= retorno.salarioF %></h2>
+            <%
+        }else{
+            %>
+            <h2>Não temos retorno</h2>
+            <%
+        }
+
+
+    %>
+
+</body>
+</html>
