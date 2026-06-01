@@ -1,43 +1,74 @@
 const express = require("express");
+const { body, validationResult } = require("express-validator");
+
 const router = express.Router();
 
-router.get("/", (req, res)=>{
-    res.render("pages/index",{"retorno":null,"valores":{"salario":""}});
+router.get("/", (req, res) => {
+    res.render("pages/index", {
+        erros: null,
+        retorno: null,
+        valores: {
+            salario: ""
+        }
+    });
 });
 
-router.post("/classificar", (req, res)=>{
+router.post(
+    "/classificar",
+    [
+        body("salario")
+            .notEmpty().withMessage("O salário é obrigatório.")
+            .isFloat({ min: 0 }).withMessage("Digite um salário válido.")
+    ],
+    (req, res) => {
 
-    //recuperar a idade do nadador
-    let salario = parseInt(req.body.salario);
+        const erros = validationResult(req);
 
-    //manipular os dados -> classificar
-    if(salario <= 1400){
-        var porcentagem = 15;
-        var aumento = salario * porcentagem / 100;
-        var salarioF = salario + aumento;
-    }else if(salario > 1400 && salario <= 4500){
-        var porcentagem = 10;
-        var aumento = salario * porcentagem / 100;
-        var salarioF = salario + aumento;
-    }else if(salario > 4500 && salario <= 10000){
-        var porcentagem = 7.5;
-        var aumento = salario * porcentagem / 100;
-        var salarioF = salario + aumento;
-    }else{(salario > 10000)
-        var porcentagem = 5;
-        var aumento = salario * porcentagem / 100;
-        var salarioF = salario + aumento;
+        if (!erros.isEmpty()) {
+            return res.render("pages/index", {
+                erros: erros.array(),
+                retorno: null,
+                valores: {
+                    salario: req.body.salario
+                }
+            });
+        }
+
+        let salario = parseFloat(req.body.salario);
+
+        let porcentagem;
+        let aumento;
+        let salarioF;
+
+        if (salario <= 1400) {
+            porcentagem = 15;
+        } else if (salario <= 4500) {
+            porcentagem = 10;
+        } else if (salario <= 10000) {
+            porcentagem = 7.5;
+        } else {
+            porcentagem = 5;
+        }
+
+        aumento = salario * porcentagem / 100;
+        salarioF = salario + aumento;
+
+        let objJson = {
+            salario: salario,
+            porcentagem: porcentagem,
+            aumento: aumento,
+            salarioF: salarioF
+        };
+
+        res.render("pages/index", {
+            erros: null,
+            retorno: objJson,
+            valores: {
+                salario: req.body.salario
+            }
+        });
+
     }
-
-
-
-
-     //formatação 
-    let objJson = {"salario":salario, "porcentagem":porcentagem,"aumento":aumento, "salarioF":salarioF};
-
-    //envio dos dados para mescalr com o HTML
-    res.render("pages/index",{"retorno":objJson,"valores":{"dia":req.body.salario}})
-
-});
+);
 
 module.exports = router;
