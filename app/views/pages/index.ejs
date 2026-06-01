@@ -4,33 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista 1 Exercício 3</title>
+
+    <style>
+
+        .erro{
+            border: 2px solid red;
+        }
+
+        .msgErro{
+            color: red;
+        }
+
+    </style>
+
 </head>
 <body>
 
+    <%
+
+        let erroSalario = "";
+        let msgErroSalario = "";
+
+        if(erros){
+
+            erros.forEach(function(item){
+
+                if(item.path == "salario"){
+                    erroSalario = "erro";
+                    msgErroSalario = item.msg;
+                }
+
+            });
+
+        }
+
+    %>
+
     <form action="/classificar" method="post">
 
-        <label for="salario">Digite o seu Salario:</label> <br>
-        <input type="text" name="salario" id="salario" value="<%= valores.salario %>"> <br>
+        <label for="salario">Digite o seu salário:</label><br>
+
+        <input
+            type="text"
+            name="salario"
+            id="salario"
+            value="<%= valores.salario %>"
+            class="<%= erroSalario %>"
+        >
+
+        <span class="msgErro">
+            <%= msgErroSalario %>
+        </span>
+
+        <br><br>
+
         <button type="submit">Classificar</button>
 
     </form>
-    <%
 
-        if(retorno){
-            %>
-            <h2>Salario atual: <%= retorno.salario %></h2>
-            <h2>Porcentagem de aumento: <%= retorno.porcentagem %></h2>
-            <h2>Aumento: <%= retorno.aumento %></h2>
-            <h2>Salario Final: <%= retorno.salarioF %></h2>
-            <%
-        }else{
-            %>
-            <h2>Não temos retorno</h2>
-            <%
-        }
+    <% if(retorno){ %>
 
+        <h2>Salário atual: <%= retorno.salario %></h2>
+        <h2>Porcentagem de aumento: <%= retorno.porcentagem %>%</h2>
+        <h2>Aumento: <%= retorno.aumento %></h2>
+        <h2>Salário final: <%= retorno.salarioF %></h2>
 
-    %>
+    <% } else { %>
+
+        <h2>Não temos retorno</h2>
+
+    <% } %>
 
 </body>
 </html>
